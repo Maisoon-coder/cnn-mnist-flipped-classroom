@@ -221,3 +221,18 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# --- project specific (CNN MNIST) ---
+data/
+*.zip
+*.mp4
+*.pptx
+*.rar
+.venv/
+venv/
+__pycache__/
+*.pyc
+# keep experiment text logs and figures
+!outputs/**/*.csv
+!outputs/**/*.png
