@@ -42,7 +42,19 @@ CNN 参数比 FC 少 **141,824** 个，下降 **69.68%**（结构计算值，最
 
 ## 四、环境
 
-待补。待代码实跑通过后由 `requirements.txt` 锁定精确版本（Python / PyTorch / torchvision / NumPy），并在 `environment.txt` 记录设备型号与是否启用 CUDA。
+统一方案见 **[docs/环境统一说明.md](docs/环境统一说明.md)**，要点：
+
+- 必须装 PyTorch 的是**组员 3、4、5**；组员 1 建议装；组员 2 不需要；
+- Python 3.11—3.14 均可（推荐 3.12），装 **CPU 版** torch 即可；
+- 三人版本必须一致，D4 首次跑通后由 `pip freeze` 锁定 `requirements.txt`。
+
+装完运行自检（只读，不安装任何东西）：
+
+```bash
+python scripts/check_env.py
+```
+
+通过标准：最后一行输出 `RESULT: PASS`。
 
 ## 五、快速开始
 
