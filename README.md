@@ -79,7 +79,49 @@ python -m src.predict --checkpoint <CNN权重> --image <图片路径>
 
 ## 七、数据准备
 
-首次运行会自动下载 MNIST；若网络不可用，可手动将 4 个 `idx.gz` 文件放入 `data/MNIST/raw/`。
+### 7.1 获取 MNIST
+
+首次运行会自动下载；若网络不可用，可手动将 4 个文件放入 `data/MNIST/raw/`（文件名不能改，保持 `.gz` 不解压）：
+
+| 文件 | 大小 | MD5 |
+|---|---:|---|
+| `train-images-idx3-ubyte.gz` | 9,912,422 | `f68b3c2dcbeaaa9fbdd348bbdeb94873` |
+| `train-labels-idx1-ubyte.gz` | 28,881 | `d53e105ee54ea40749a09fcbcd1e9432` |
+| `t10k-images-idx3-ubyte.gz` | 1,648,877 | `9fb629c4189551a2d022fa330f9573f3` |
+| `t10k-labels-idx1-ubyte.gz` | 4,542 | `ec29112dd5afa0611ce80d1b7f02629c` |
+
+镜像：`https://ossci-datasets.s3.amazonaws.com/mnist/`（`data/` 不入库）。
+
+### 7.2 训练集抽样：30,000 张
+
+为缩短训练时间，本项目**不使用全部 60,000 张训练样本**，而使用一个固定的分层子集：
+
+| 项 | 取值 |
+|---|---|
+| 训练样本数 | **30,000**（每类 3,000，类别完全均衡） |
+| 抽样方式 | 分层随机抽样，`numpy.random.default_rng(42)` |
+| 索引文件 | `splits/train_30000_seed42.npy`（int64，升序，30,000 个不重复索引） |
+| 测试样本数 | **10,000（全量，不抽样）** |
+
+重新生成索引：
+
+```bash
+python scripts/make_subset.py --n 30000 --seed 42
+```
+
+使用方式（**两个模型必须读同一个索引文件**）：
+
+```python
+import numpy as np
+import torch.utils.data as tud
+from torchvision import datasets
+
+idx = np.load("splits/train_30000_seed42.npy")
+full = datasets.MNIST(root="data", train=True, download=False, transform=tf)
+train_ds = tud.Subset(full, idx)
+```
+
+> ⚠️ **口径要求**：所有材料（PPT、README、答辩）中描述样本数时，必须写"训练集 30,000（分层抽样）/ 测试集 10,000（全量）"，**不得声称使用了全部 60,000 张**。FC 与 CNN 必须使用完全相同的索引文件，否则对比无效。
 
 ## 八、小组分工
 
