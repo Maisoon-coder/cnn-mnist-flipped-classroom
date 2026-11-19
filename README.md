@@ -154,6 +154,7 @@ python -m src.predict --checkpoint outputs/main_seed42_v1/checkpoints/cnn_seed42
 | [环境统一说明](docs/环境统一说明.md) | 谁装什么、怎么装、怎么自检 |
 | [五人协作关系图](docs/五人协作关系图.md) | 交付流向与复核关系 |
 | [交接文档](docs/交接文档/) | 组员 4 的自留记录与致各成员的交接 |
+| [组员3任务完成说明](docs/组员3任务完成说明.md) | 组员 3 的九项任务完成情况与 H2 / H2b 验收记录 |
 
 ## 九、协作约定
 
