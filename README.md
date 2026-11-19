@@ -1,4 +1,4 @@
-# CNN 原理与 MNIST 手写数字识别实战
+﻿# CNN 原理与 MNIST 手写数字识别实战
 
 > 翻转课堂 1 小组项目 · 10 分钟汇报 + 2 分钟答疑 · 5 人小组
 > 组名：待填 ｜ 成员：待填
@@ -142,7 +142,47 @@ python -m src.predict --checkpoint outputs/main_seed42_v1/checkpoints/cnn_seed42
 - 基础版本不含数据增强 / Dropout / BatchNorm / 学习率调度（刻意设计，保证两模型只在结构上不同）
 - CNN 第 5 轮仍在上升，加轮次还能涨，但按规定锁定 5 轮
 
-## 八、文档索引
+## 八、接口约定（组员 4、5 直接调用）
+
+| 内容 | 约定 |
+|---|---|
+| 输入张量 | `[N, 1, 28, 28]` float32，已标准化（mean=0.1307，std=0.3081） |
+| 标签张量 | `[N]` int64，取值 0—9 |
+| 模型输出 | `[N, 10]` **logits，不含 Softmax** |
+| 模型名 | `"fc"` / `"cnn"`，统一入口 `build_model(name)` |
+| 参数量 | FC 203,530；CNN 61,706（均含偏置） |
+| CNN 特征 | `forward_features(x)` → `conv1_relu` `[N,6,28,28]`、`pool1` `[N,6,14,14]`、`conv2_relu` `[N,16,10,10]`、`pool2` `[N,16,5,5]` |
+| Flatten 大小 | 400 |
+| 加载器 | `get_loaders(batch_size, seed, num_workers)` → `(train, train_eval, test)` |
+| 权重格式 | `save_checkpoint(...)` 写 dict；`load_model_from_checkpoint(path)` 还原出已 `eval()` 的模型 |
+| 索引回查 | `get_raw_dataset_by_split("test")[i]` 拿 0—1 像素原图 |
+
+训练循环见 [`src/train.py`](src/train.py)，评估与误判导出见 [`src/evaluate.py`](src/evaluate.py)。
+
+```python
+from src.data import get_loaders
+from src.models import build_model, count_parameters
+
+train_loader, train_eval_loader, test_loader = get_loaders(batch_size=64, seed=42)
+model = build_model("cnn")
+print(count_parameters(model))          # 61706
+# zero_grad → forward → CrossEntropy(logits, y) → backward → step
+```
+
+> 三条最容易踩的坑：**输出不要套 Softmax**、**测试集不打乱才能按索引回查**、**预测必须复用 `build_transform()`**。
+
+## 九、常见报错
+
+| 现象 | 原因 | 处理 |
+|---|---|---|
+| `FileNotFoundError: MNIST 数据不完整` | `data/MNIST/raw/` 里没有四个文件 | 按报错列出的四个文件名补上，层级必须是 `data/MNIST/raw/` |
+| `mat1 and mat2 shapes cannot be multiplied` | Flatten 后维度不是 400 | 检查 Conv1 的 padding 是否为 2、两个池化是否都是 2×2 |
+| `ModuleNotFoundError: No module named 'src'` | 没在项目根目录执行，或没加 `-m` | 回到项目根目录，用 `python -m src.predict ...` |
+| `FileNotFoundError: 找不到权重文件` | 相对路径起点不是项目根 | 用绝对路径，或先 `cd` 到项目根 |
+| 预测结果明显离谱 | 图片极性反了 / 不是 28×28 的 MNIST 风格 | 白底黑字加 `--invert`；确认数字居中、未被裁切 |
+| torch 加载权重报 `UnpicklingError` | torch 版本不一致 | `load_checkpoint` 已固定 `weights_only=False`，仍失败则统一版本 |
+
+## 十、文档索引
 
 | 文档 | 内容 |
 |---|---|
@@ -156,7 +196,7 @@ python -m src.predict --checkpoint outputs/main_seed42_v1/checkpoints/cnn_seed42
 | [交接文档](docs/交接文档/) | 组员 4 的自留记录与致各成员的交接 |
 | [组员3任务完成说明](docs/组员3任务完成说明.md) | 组员 3 的九项任务完成情况与 H2 / H2b 验收记录 |
 
-## 九、协作约定
+## 十一、协作约定
 
 - 一个文件只有一名写者，改动前先 `git pull`
 - 提交说明写清做了什么，例如「添加 models.py 的 CNN 定义」
