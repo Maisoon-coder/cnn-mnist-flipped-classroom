@@ -1,0 +1,47 @@
+{
+  "_说明": "组员 3 起草的配置初稿，正式版由组员 4 维护。字段与《CNN任务总体方案》§2.2 一一对应，冻结后不得随意改动；改动即需新建 run_id 并重跑双方实验。",
+  "run_id": "main_seed42_v1",
+  "seed": 42,
+  "data": {
+    "root": "data",
+    "dataset": "MNIST",
+    "batch_size": 64,
+    "num_workers": 0,
+    "download": false,
+    "shuffle_train": true,
+    "shuffle_eval": false,
+    "drop_last": false,
+    "normalize_mean": 0.1307,
+    "normalize_std": 0.3081,
+    "input_shape": [1, 28, 28],
+    "num_classes": 10,
+    "train_size": 60000,
+    "test_size": 10000
+  },
+  "train": {
+    "epochs": 5,
+    "optimizer": "adam",
+    "lr": 0.001,
+    "weight_decay": 0.0,
+    "loss": "cross_entropy",
+    "device": "auto",
+    "select_last_epoch": true,
+    "note": "基础版本不加数据增强、Dropout、BatchNorm、学习率调度，保证 FC 与 CNN 只在结构上不同"
+  },
+  "models": {
+    "fc": {
+      "name": "fc",
+      "layers": "Flatten -> Linear(784,256) -> ReLU -> Linear(256,10)",
+      "expected_params": 203530
+    },
+    "cnn": {
+      "name": "cnn",
+      "layers": "Conv(1,6,5,pad=2) -> ReLU -> MaxPool(2) -> Conv(6,16,5) -> ReLU -> MaxPool(2) -> Flatten(400) -> Linear(400,120) -> ReLU -> Linear(120,84) -> ReLU -> Linear(84,10)",
+      "expected_params": 61706
+    }
+  },
+  "outputs": {
+    "root": "outputs",
+    "checkpoint_pattern": "checkpoints/{model}_seed{seed}_last.pt"
+  }
+}

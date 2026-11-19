@@ -137,9 +137,14 @@ def main():
     if torchvision is not None:
         def mnist_check():
             from torchvision import datasets
-            ds = datasets.MNIST(root="data", train=False,
-                                download=bool(args.download))
-            return "test set size={}".format(len(ds))
+            try:
+                ds = datasets.MNIST(root="data", train=False, download=False)
+                return "test set size={} (pre-processed)".format(len(ds))
+            except Exception:
+                # 首次使用：本地已有 .gz，torchvision 会校验 MD5 后离线解压，不会联网
+                ds = datasets.MNIST(root="data", train=False, download=True)
+                return "test set size={} (extracted from local .gz)".format(len(ds))
+
         if args.download:
             run("MNIST", mnist_check)
         else:

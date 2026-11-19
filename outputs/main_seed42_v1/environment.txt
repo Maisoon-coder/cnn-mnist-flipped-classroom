@@ -1,0 +1,9 @@
+python      3.14.3
+executable  C:\Users\27056\Desktop\cnn-mnist-flipped-classroom\.venv\Scripts\python.exe
+platform    Windows-11-10.0.26300-SP0
+torch       2.15.0+cpu
+torchvision 0.29.2+cpu
+numpy       2.5.5
+device      cpu
+cuda avail  False
+threads     8

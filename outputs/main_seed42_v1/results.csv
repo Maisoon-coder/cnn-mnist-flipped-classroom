@@ -1,0 +1,3 @@
+﻿run_id,model,seed,epoch,n_params,test_acc,test_loss,n_samples,checkpoint
+main_seed42_v1,cnn,42,5,61706,0.990000,0.031183,10000,checkpoints/cnn_seed42_last.pt
+main_seed42_v1,fc,42,5,203530,0.971900,0.092617,10000,checkpoints/fc_seed42_last.pt

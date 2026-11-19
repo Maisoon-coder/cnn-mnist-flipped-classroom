@@ -236,3 +236,9 @@ __pycache__/
 # keep experiment text logs and figures
 !outputs/**/*.csv
 !outputs/**/*.png
+
+# 本地安装缓存与调试产物（不入库）
+.wheels/
+_tmp/
+outputs/_smoke/
+outputs/smoke_check/
