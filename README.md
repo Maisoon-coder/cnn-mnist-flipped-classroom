@@ -109,6 +109,7 @@
 │   ├── errors_fc.csv  errors_cnn.csv
 │   └── checkpoints/{fc,cnn}_seed42_last.pt
 ├── demo/                       10 张演示图（0—9 各一张，来自测试集）
+├── slides/                     PPT 分页文件（组员 3：第 6—7 页）
 ├── figures/                    9 张结果图（组员 5，由 visualize.py 生成）
 ├── analysis/                   结果表、每类准确率、误判配对、公平性检查表
 ├── visualize.py                统一绘图入口，一次生成全部图表
@@ -248,6 +249,7 @@ print(count_parameters(model))          # 61706
 | [验收自检表](docs/组员5/验收自检表.md) | 5-01 ~ 5-08 对照细则逐条自检 |
 | [第 8—10 页文案](docs/组员4/PPT_8-10文案.md) | 组员 4：结构/训练循环/单图预测，含 150 秒口播 |
 | [答疑卡（组员4）](docs/组员4/答疑卡.md) | 必答六问 + 备用数字 |
+| [第 6—7 页 PPT](slides/组员3_第6-7页.pptx) | 组员 3：数据预处理流水线、网络结构（90 秒） |
 
 ## 十一、协作约定
 
