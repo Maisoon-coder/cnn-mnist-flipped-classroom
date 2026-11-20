@@ -242,3 +242,6 @@ __pycache__/
 _tmp/
 outputs/_smoke/
 outputs/smoke_check/
+
+# PPT 分页文件需要入库（仅限 slides/）
+!slides/*.pptx
